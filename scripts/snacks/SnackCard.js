@@ -2,7 +2,8 @@ export const SnackCard = (snackObject) => {
 	return `
 	<div class="col">
 		<div class="card shadow-sm">
-            <img class="bd-placeholder-img card-img-top card-img-top-list"  aria-label="Placeholder:${snackObject.name}" preserveAspectRatio="xMidYMid slice" focusable="false" src="${snackObject.snackImg}" alt="${snackObject.name}">
+            <img class="bd-placeholder-img card-img-top card-img-top-list"  aria-label="Placeholder:${snackObject.name}" 
+            preserveAspectRatio="xMidYMid slice" focusable="false" src="${snackObject.snackImg}" alt="${snackObject.name}">
             <div class="card-body">
 			<h5 color="primary">${snackObject.name}</h5>
               <p class="card-text">${snackObject.description}</p>
