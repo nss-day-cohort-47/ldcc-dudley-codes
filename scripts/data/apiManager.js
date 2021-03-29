@@ -68,10 +68,42 @@ export const getSnacks = () => {
 }
 
 export const getSingleSnack = (snackId) => {
-	return fetch(`${apiURL}/snacks/${snackId}?_expand=inFlavor&_expand=type&_expand=shape&_expand=season`)
+	return fetch(`${apiURL}/snacks/${snackId}?_expand=inFlavor&_expand=type&_expand=shape&_expand=season&_embed=snackToppings`)
 	.then(response => response.json())
+  .then(parsedResponse => {
+    const myBrainIsMush = getOptions(parsedResponse.id)
+      .then(toppingsString => {
+        parsedResponse.toppingsString = toppingsString
+        console.log("parsedResponse", parsedResponse)
+        return parsedResponse
+      })
+    return myBrainIsMush
+  })
+  .then(newObject => newObject)
 }
 
-export const getOptions = () => {
-  return fetch(`${apiURL}/snacks/`)
+export const getOptions = (snackId) => {
+  return fetch(`${apiURL}/snackToppings?snackId=${snackId}&_expand=topping`)
+  .then(response => response.json())
+  .then(response => {
+    console.log("This is the response", response)
+    return toppingsFunction(response)
+  })
 }
+
+export let allToppings = []
+const toppingsFunction = (array) => {
+  const filterOptions = array
+  console.log("filterOptions",filterOptions)
+  if(filterOptions !== undefined){  
+    for (const oneTopping of filterOptions){
+    allToppings.push(oneTopping.topping.name)
+  }
+  console.log("allToppings", allToppings.toString())
+  return allToppings.toString()
+  }
+
+
+}
+
+toppingsFunction()
