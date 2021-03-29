@@ -59,10 +59,11 @@ export const useSnackCollection = () => {
 }
 
 export const getSnacks = () => {
-	return fetch(`${apiURL}/snacks`)
+	return fetch(`${apiURL}/snacks?_expand=inFlavor&_expand=type&_expand=shape&_expand=season&_embed=snackToppings`)
 		.then(response => response.json())
 		.then(parsedResponse => {
 			snackCollection = parsedResponse
+      console.log("snackCollection", snackCollection)
 			return parsedResponse;
 		})
 }
@@ -110,8 +111,9 @@ export const getToppings = () => {
   return fetch(`${apiURL}/toppings`)
   .then(response => response.json())
   .then(response => {
-    return renderMenu(response)
-    
+
+    renderMenu(response)
+    return response 
   })
 }
 
@@ -119,19 +121,19 @@ export let toppingList = []
 const renderMenu = (toppingsList) => {
   const menuTarget = document.querySelector(".form-select")
     let menuOptions = toppingsList.map(singleItem => {
-      return `<option value="${singleItem.id}">${singleItem.name}</option>`
+      // singleItem.id = topping ID
+      return `<option value="${singleItem.id}" name="${singleItem.name}">${singleItem.name}</option>`
     }).join("")
     toppingList = toppingsList
     // console.log("toppingList", toppingList)
     menuTarget.innerHTML = menuOptions
 }
 
-export const getSnackToppings = () => {
-  return fetch (`${apiURL}/snackToppings`)
+export const getSnackToppings = (toppingId) => {
+  return fetch (`${apiURL}/snackToppings?toppingId=${toppingId}&_expand=snack`)
   .then(response => response.json())
-  .then( response => {
-    return response
+  .then( parsedResponse => {
+    return parsedResponse
   })
 }
 
-getSnackToppings()

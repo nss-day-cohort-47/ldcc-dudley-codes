@@ -10,6 +10,7 @@ import {
 	logoutUser, setLoggedInUser, loginUser, registerUser, getLoggedInUser,
 	getSnacks, getSingleSnack, getOptions, useSnackCollection, getToppings, toppingList, getSnackToppings
 } from "./data/apiManager.js";
+import { SnackCard } from "./snacks/SnackCard.js";
 
 
 
@@ -88,38 +89,31 @@ const showDetails = (snackObj) => {
 //end snack listeners
 
 // todo Start sort listener
-applicationElement.addEventListener("change", event => {
-  event.preventDefault();
-  if (event.target.getElementsByClassName("form-select")){
-    getToppings()
-      .then(response =>
-        console.log("getToppings", response))
-    getSnacks()
-      .then(response => console.log("getSnacks", response))
-    getSnackToppings()
-      .then(response => {
-        const filteredToppings = response.filter(singleTopping => {
-          console.log("testing", getSnacks())
-          if(singleTopping.toppingId === toppingList.id && singleTopping.snackId === getSnacks().id){
-            console.log("Fuck yeah!")
-          }
-        })
-        // console.log("please work", toppingList)
+let filterList = {};
+  const filteredToppings = (snaxId) => {
+    console.log("snaxId", snaxId)
+    getSnackToppings(snaxId)
+      .then(toppings => {
+        for(const topping of toppings){
+          console.log("toppings array", toppings)
+          filterList += topping.snack, console.log(topping.snack)
+          return filterList, console.log("FilterList", filterList)
         }
-      )
-    
+      }
+    )
+    .then(results => {
+      console.log("test", results)
+      const listElement = document.querySelector("#mainContent")
+      listElement.innerHTML = SnackList(results);
+    })
   }
-})
 
-
-//  if (toppingList.id === response.toppingId){
-//             return console.log("It worked!", response)
-//           }
-// const showFilteredSnacks = (toppings) => {
-//   const filteredSnack = useSnackCollection().filter(singleSnack => {
-//     if (singleSnack)
-//   })
-// }
+applicationElement.addEventListener("change", event => {
+  if (event.target.getElementsByClassName("form-select")){
+    const selectedValue = event.target.value;
+    console.log("selected is", selectedValue)
+    filteredToppings(selectedValue)
+      }})
 
 
 // todo end sort listener
