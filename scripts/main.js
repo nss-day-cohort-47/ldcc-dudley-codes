@@ -8,7 +8,7 @@ import { SnackDetails } from "./snacks/SnackDetails.js";
 import { Footer } from "./nav/Footer.js";
 import {
 	logoutUser, setLoggedInUser, loginUser, registerUser, getLoggedInUser,
-	getSnacks, getSingleSnack, getOptions
+	getSnacks, getSingleSnack, getOptions, useSnackCollection, getToppings, toppingList, getSnackToppings
 } from "./data/apiManager.js";
 
 
@@ -67,7 +67,7 @@ applicationElement.addEventListener("click", event => {
 		const snackId = event.target.id.split("__")[1];
 		getSingleSnack(snackId)
 			.then(response => {
-        console.log("snackID response", response)
+        // console.log("snackID response", response)
 				showDetails(response);
 			})
 
@@ -86,6 +86,43 @@ const showDetails = (snackObj) => {
 	listElement.innerHTML = SnackDetails(snackObj);
 }
 //end snack listeners
+
+// todo Start sort listener
+applicationElement.addEventListener("change", event => {
+  event.preventDefault();
+  if (event.target.getElementsByClassName("form-select")){
+    getToppings()
+      .then(response =>
+        console.log("getToppings", response))
+    getSnacks()
+      .then(response => console.log("getSnacks", response))
+    getSnackToppings()
+      .then(response => {
+        const filteredToppings = response.filter(singleTopping => {
+          console.log("testing", getSnacks())
+          if(singleTopping.toppingId === toppingList.id && singleTopping.snackId === getSnacks().id){
+            console.log("Fuck yeah!")
+          }
+        })
+        // console.log("please work", toppingList)
+        }
+      )
+    
+  }
+})
+
+
+//  if (toppingList.id === response.toppingId){
+//             return console.log("It worked!", response)
+//           }
+// const showFilteredSnacks = (toppings) => {
+//   const filteredSnack = useSnackCollection().filter(singleSnack => {
+//     if (singleSnack)
+//   })
+// }
+
+
+// todo end sort listener
 
 const checkForUser = () => {
 	if (sessionStorage.getItem("user")) {
@@ -125,6 +162,7 @@ const startLDSnacks = () => {
 	applicationElement.innerHTML += `<div id="mainContent"></div>`;
 	showSnackList();
 	showFooter();
+  getToppings();
 
 }
 
