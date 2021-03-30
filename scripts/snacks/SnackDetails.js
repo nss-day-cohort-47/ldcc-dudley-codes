@@ -2,7 +2,7 @@
 export let snackId = ""
 export const SnackDetails = (snackObject) => {
   // console.log("Snack flavor is", snackObject.inFlavor.name)
-  console.log("snaxxxxx", snackObject)
+  // console.log("snaxxxxx", snackObject)
   // console.log("snackID is", snackId)
   // console.log("snackObject", snackObject.toppingsString)
 	return `

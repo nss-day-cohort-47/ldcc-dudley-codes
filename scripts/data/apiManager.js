@@ -59,10 +59,11 @@ export const useSnackCollection = () => {
 }
 
 export const getSnacks = () => {
-	return fetch(`${apiURL}/snacks`)
+	return fetch(`${apiURL}/snacks?_expand=inFlavor&_expand=type&_expand=shape&_expand=season&_embed=snackToppings`)
 		.then(response => response.json())
 		.then(parsedResponse => {
 			snackCollection = parsedResponse
+      console.log("snackCollection", snackCollection)
 			return parsedResponse;
 		})
 }
@@ -74,7 +75,7 @@ export const getSingleSnack = (snackId) => {
     const myBrainIsMush = getOptions(parsedResponse.id)
       .then(toppingsString => {
         parsedResponse.toppingsString = toppingsString
-        console.log("parsedResponse", parsedResponse)
+        // console.log("parsedResponse", parsedResponse)
         return parsedResponse
       })
     return myBrainIsMush
@@ -86,7 +87,7 @@ export const getOptions = (snackId) => {
   return fetch(`${apiURL}/snackToppings?snackId=${snackId}&_expand=topping`)
   .then(response => response.json())
   .then(response => {
-    console.log("This is the response", response)
+    // console.log("This is the response", response)
     return toppingsFunction(response)
   })
 }
@@ -94,16 +95,45 @@ export const getOptions = (snackId) => {
 export let allToppings = []
 const toppingsFunction = (array) => {
   const filterOptions = array
-  console.log("filterOptions",filterOptions)
+  // console.log("filterOptions",filterOptions)
   if(filterOptions !== undefined){  
     for (const oneTopping of filterOptions){
     allToppings.push(oneTopping.topping.name)
   }
-  console.log("allToppings", allToppings.toString())
+  // console.log("allToppings", allToppings.toString())
   return allToppings.toString()
   }
-
-
 }
 
-toppingsFunction()
+// todo fetch all toppings and render to dropdown menu
+
+export const getToppings = () => {
+  return fetch(`${apiURL}/toppings`)
+  .then(response => response.json())
+  .then(response => {
+
+    renderMenu(response)
+    return response 
+  })
+}
+
+export let toppingList = []
+const renderMenu = (toppingsList) => {
+  const menuTarget = document.querySelector(".form-select")
+    let menuOptions = toppingsList.map(singleItem => {
+      // singleItem.id = topping ID
+      return `<option value="${singleItem.id}" name="${singleItem.name}">${singleItem.name}</option>`
+    }).join("")
+    toppingList = toppingsList
+    // console.log("toppingList", toppingList)
+    menuTarget.innerHTML = menuOptions
+}
+
+export const getSnackToppings = (toppingId) => {
+  return fetch (`${apiURL}/snackToppings?toppingId=${toppingId}&_expand=snack`)
+  .then(response => response.json())
+  .then( parsedResponse => {
+    return parsedResponse
+  })
+}
+
