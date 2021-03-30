@@ -87,7 +87,6 @@ export const getOptions = (snackId) => {
   return fetch(`${apiURL}/snackToppings?snackId=${snackId}&_expand=topping`)
   .then(response => response.json())
   .then(response => {
-    // console.log("This is the response", response)
     return toppingsFunction(response)
   })
 }
@@ -101,38 +100,37 @@ const toppingsFunction = (array) => {
     allToppings.push(oneTopping.topping.name)
   }
   // console.log("allToppings", allToppings.toString())
-  return allToppings.toString()
+  return allToppings.join(", ")
   }
 }
 
 // todo fetch all toppings and render to dropdown menu
-
 export const getToppings = () => {
   return fetch(`${apiURL}/toppings`)
   .then(response => response.json())
   .then(response => {
-
     renderMenu(response)
     return response 
   })
 }
 
-export let toppingList = []
+
 const renderMenu = (toppingsList) => {
   const menuTarget = document.querySelector(".form-select")
     let menuOptions = toppingsList.map(singleItem => {
       // singleItem.id = topping ID
       return `<option value="${singleItem.id}" name="${singleItem.name}">${singleItem.name}</option>`
     }).join("")
-    toppingList = toppingsList
+    // toppingList = toppingsList
     // console.log("toppingList", toppingList)
     menuTarget.innerHTML = menuOptions
 }
 
+// TODO Export fetch call that fetches snack toppings with expanded snacks
 export const getSnackToppings = (toppingId) => {
   return fetch (`${apiURL}/snackToppings?toppingId=${toppingId}&_expand=snack`)
   .then(response => response.json())
-  .then( parsedResponse => {
+  .then(parsedResponse => {
     return parsedResponse
   })
 }
