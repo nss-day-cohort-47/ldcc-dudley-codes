@@ -3,12 +3,12 @@ console.log('yum, yum, yum');
 import { LoginForm } from "./auth/LoginForm.js";
 import { RegisterForm } from "./auth/RegisterForm.js";
 import { NavBar } from "./nav/NavBar.js";
-import { SnackList, SnackSort } from "./snacks/SnackList.js";
+import { SnackList } from "./snacks/SnackList.js";
 import { SnackDetails } from "./snacks/SnackDetails.js";
 import { Footer } from "./nav/Footer.js";
 import {
 	logoutUser, setLoggedInUser, loginUser, registerUser, getLoggedInUser,
-	getSnacks, getSingleSnack, getOptions, useSnackCollection, getToppings, toppingList, getSnackToppings
+	getSnacks, getSingleSnack, getOptions, useSnackCollection, getToppings, getSnackToppings
 } from "./data/apiManager.js";
 
 
@@ -88,24 +88,26 @@ const showDetails = (snackObj) => {
 //end snack listeners
 
 // todo Start sort listener
-const filteredToppings = (snaxId) => {
-    console.log("snaxId", snaxId)
-    getSnackToppings(snaxId)
-      .then(toppings => {
-        const listElement = document.querySelector("#mainContent")
-        listElement.innerHTML = SnackSort(toppings)
-      }
-    )
-  }
-
 applicationElement.addEventListener("change", event => {
   if (event.target.getElementsByClassName("form-select")){
     const selectedValue = event.target.value;
-    console.log("selected is", selectedValue)
     filteredToppings(selectedValue)
       }
     }
   )
+
+const filteredToppings = (toppingId) => {
+    getSnackToppings(toppingId)
+      .then(toppings => {
+        let snaxArray = []
+        toppings.forEach(snack => {
+        snaxArray.push(snack.snack)
+        })
+        const listElement = document.querySelector("#mainContent")
+        listElement.innerHTML = SnackList(snaxArray)
+      }
+    )
+  }
 // todo end sort listener
 
 const checkForUser = () => {
